@@ -1,6 +1,7 @@
 package com.example.alarm;
 
 import android.app.NotificationManager;
+import android.app.NotificationChannel;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +22,21 @@ public class AlarmReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         Log.d(TAG, "Alarm Triggered!");
+
+        // Create notification channel (idempotent, safe to call multiple times)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel(
+                    "alarm_channel",
+                    "Alarm Channel",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            channel.setDescription("Channel for Alarm notifications");
+            channel.enableVibration(true);
+            channel.setVibrationPattern(new long[]{0, 500, 250, 500});
+
+            NotificationManager manager = context.getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(channel);
+        }
 
         // Get the default alarm sound
         Uri alarmSound = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);

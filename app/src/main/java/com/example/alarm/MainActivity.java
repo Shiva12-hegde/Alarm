@@ -121,8 +121,8 @@ public class MainActivity extends AppCompatActivity {
         }
 
         Intent intent = new Intent(this, AlarmReceiver.class);
-        // Use unique request code based on time to allow multiple alarms
-        int requestCode = (hour * 60) + minute;
+        // Use a more unique request code to allow multiple alarms at the same time
+        int requestCode = (int) System.currentTimeMillis();
         pendingIntent = PendingIntent.getBroadcast(this, requestCode, intent,
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
